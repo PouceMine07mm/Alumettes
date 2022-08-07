@@ -4,3 +4,8 @@ button {
     color: rgb(0, 0, 0);
     padding: 3px;
   }
+  
+button:disabled {
+   color: rgb(179, 179, 179);
+   background-color: rgb(221, 221, 221);
+}
