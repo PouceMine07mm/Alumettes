@@ -3,7 +3,7 @@ html * {
 }
 
 body {
-  background-color: #4d2c46;
+  background-color: #2b2b2b;
   font-size: 20px;
 }
 
@@ -30,16 +30,6 @@ button {
   color: white;
   margin-bottom: 7.5px;
   border-radius: 10px;
-}
-
-button.curseurs {
-  font-size: 15px;
-  background-color: rgb(119, 0, 255);
-  color: black;
-  border-radius: 10px;
-  width: 90;
-  height: 90;
-  float: right;
 }
 
 .container {
