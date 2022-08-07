@@ -20,6 +20,7 @@ var souffrePrix = 10
 // TODO Faire en sorte les chiffres ronds n'aient pas de ".0"
 //Fonction qui deduit les quantites d'inventaire
 function faireAlumette(){
+    if ( boisQt > 0 ){
         boisQt -= 0.10
         souffreQt -= 1
         boisQt = Number.parseFloat(boisQt).toFixed(1);
@@ -27,6 +28,8 @@ function faireAlumette(){
         document.getElementById("souffreInventaire").innerHTML = souffreQt
         incrementSomme()
 
+    } else {
+        document.getElementById("somme").disabled = true
     }
 }
 
