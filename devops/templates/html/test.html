@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+#myDIV {
+  width: 100%;
+  padding: 50px 0;
+  text-align: center;
+  background-color: rgb(255, 255, 255);
+  margin-top: 20px;
+}
+#monDIV {
+  width: 100%;
+  padding: 50px 0;
+  text-align: center;
+  background-color: blue;
+  margin-top: 20px;
+}
+
+
+#monDIV2 {
+  width: 100%;
+  padding: 50px 0;
+  text-align: center;
+  background-color: blue;
+  margin-top: 20px;
+}
+
+#monDIV3 {
+  width: 100%;
+  padding: 50px 0;
+  text-align: center;
+  background-color: blue;
+  margin-top: 20px;
+}
+
+</style>
+</head>
+<body>
+
+<p>Click the "Try it" button to toggle between hiding and showing the DIV element:</p>
+
+
+
+<a onclick="permuterVisibilite('myDIV')"><img src="https://cdn.arstechnica.net/wp-content/uploads/2016/02/5718897981_10faa45ac3_b-640x624.jpg" height='40' width='40' ></img></a>
+
+<div id="myDIV" display: none;>
+<a onclick="permuterVisibilite('myDIV')><img src='porte.png'></a>
+
+
+</div>
+
+
+<p><b>Note:</b> The element will not take up any space when the display property set to "none".</p>
+
+<script>
+function permuterVisibilite() {
+  var x = document.getElementById(arguments[0]);
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script>
+
+</body>
+</html>

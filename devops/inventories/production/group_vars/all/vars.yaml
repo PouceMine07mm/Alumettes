@@ -1,0 +1,96 @@
+---
+
+
+infra_environment: 'production'
+
+# mlv #
+# mlv # p4broker_project_ip:                      default_value-172.18.88.15
+# mlv #
+# mlv #
+# mlv #
+# mlv # conf:
+# mlv #   defaults:
+# mlv #     p4broker_project_name:                    default_value-allolemonde
+# mlv #     p4broker_project_ip:                      default_value-172.18.88.15
+# mlv #     p4broker_project_p4broker_port:           default_value-4321234
+# mlv # #list_zero:
+# mlv # #  - p4broker-01-A:
+# mlv # #      p4broker_project_name:                    allolemonde
+# mlv # #      p4broker_project_ip:                      172.18.88.15
+# mlv # #      p4broker_project_p4broker_port:           4321234
+# mlv # #
+# mlv #
+# mlv #
+# mlv # # default user settings
+# mlv # omnipresent_users:
+# mlv #   - username: mvincent
+# mlv #     append: 'true'
+# mlv #     supplemental_groups: adm,ssh-users,wheel
+# mlv #     shell: /bin/bash
+# mlv #     state: present
+# mlv #     ssh:
+# mlv #       key_filename: 'ansible-generated-key'
+# mlv #       generate_key: 'true'
+# mlv #       key_bits: 4096
+# mlv #       key_type: 'rsa'
+# mlv #       authorized_keys:
+# mlv #         - "{{ lookup('file', lookup('env','HOME') + '/.ssh/pour-aws.pub') }}"
+# mlv #         - "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+# mlv #         - "{{ lookup('file', lookup('env','HOME') + '/.ssh/latest.pub') }}"
+# mlv #         - "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_ed25519.pub') }}"
+# mlv #         - https://github.com/MartinVincent.keys
+# mlv #         - https://github.com/LS-Martin-Vincent.keys
+# mlv #         - https://gitlab.com/vincenma.keys
+# mlv #
+# mlv #   - username: vincenma
+# mlv #     append: 'true'
+# mlv #     supplemental_groups: adm,ssh-users,wheel
+# mlv #     shell: /bin/bash
+# mlv #     state: present
+# mlv #     ssh:
+# mlv #       key_filename: 'ansible-generated-ed25519'
+# mlv #       generate_key: 'true'
+# mlv #       key_bits: 4096
+# mlv #       key_type: 'rsa'
+# mlv #       authorized_keys:
+# mlv #         - "{{ lookup('file', lookup('env','HOME') + '/.ssh/pour-aws.pub') }}"
+# mlv #         - "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+# mlv #         - "{{ lookup('file', lookup('env','HOME') + '/.ssh/latest.pub') }}"
+# mlv #         - "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_ed25519.pub') }}"
+# mlv #         - https://github.com/MartinVincent.keys
+# mlv #         - https://github.com/LS-Martin-Vincent.keys
+# mlv #         - https://gitlab.com/vincenma.keys
+# mlv #
+# mlv #   - username: martin.vincent
+# mlv #     append: 'true'
+# mlv #     supplemental_groups: adm,ssh-users,wheel
+# mlv #     shell: /bin/bash
+# mlv #     state: present
+# mlv #     ssh:
+# mlv #       key_filename: 'ansible-generated-ed25519'
+# mlv #       generate_key: 'true'
+# mlv #       key_bits: 4096
+# mlv #       key_type: 'rsa'
+# mlv #       authorized_keys:
+# mlv #         - "{{ lookup('file', lookup('env','HOME') + '/.ssh/pour-aws.pub') }}"
+# mlv #         - "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+# mlv #         - "{{ lookup('file', lookup('env','HOME') + '/.ssh/latest.pub') }}"
+# mlv #         - "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_ed25519.pub') }}"
+# mlv #         - https://github.com/MartinVincent.keys
+# mlv #         - https://github.com/LS-Martin-Vincent.keys
+# mlv #         - https://gitlab.com/vincenma.keys
+# mlv #
+# mlv #
+# mlv # # default user settings
+# mlv # default_users:
+# mlv #   - username: default_username
+# mlv #     append: 'true'
+# mlv #     supplemental_groups: adm
+# mlv #     shell: /bin/bash
+# mlv #     state: present
+# mlv #     ssh:
+# mlv #       generate_key: 'true'
+# mlv #       key_bits: 4096
+# mlv #       key_type: 'rsa'
+# mlv #       authorized_keys:
+# mlv #         - "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"

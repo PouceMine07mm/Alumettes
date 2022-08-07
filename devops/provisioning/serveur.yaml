@@ -1,0 +1,370 @@
+---
+# vim: foldmarker={{{,}}}:foldmethod=marker:filetype=yaml:expandtab:shiftwidth=2:tabstop=2:softtabstop=2:fileencoding=utf-8
+#/*******************************************************************************
+#* Auteur       : Martin VINCENT   (MVincent) info@martinvincent.com
+#* Fichier      : serveur.yaml
+#* Répertoire   : /Users/mvincent/Code/devops/ansible/playbooks/maison/nclsvncnt.net/provisioning
+#* Cree le      : 22 février 2020   13:37:00 (-0500)
+#* Modifié le   : 26 avril 2020    11:42:49 (-0400)    par : mvincent
+#* Sauvegarde # : 62
+#*******************************************************************************/
+
+
+- name: 'Create an instance'
+  hosts:
+    - localhost
+  strategy: linear
+  gather_facts: 'false'
+
+  vars_prompt:
+    - name: "instance_name"
+      private: 'false'
+      prompt: |-
+        Instance purpose name
+        It must correspond with a vars file located at - host_vars/{ instance_purpose_name }/vars.yaml
+        For non-interactive use, the value can be specified with '--extra-vars' like so :
+        ansible-playbook ... --extra-vars 'instance_purpose_name=nclsvncnt-01'
+        default value is in [value] :
+      default:  "nclsvncnt-01"
+#      default:  "{{ ( infra_environment == 'development' ) | ternary( 'artefact-master-dev-01', 'artefact-master-01') }}"
+
+  vars:
+    state: present
+    host_specific_vars: "{{ playbook_dir }}/../inventories/{{ infra_environment }}/host_vars/{{ instance_name }}/vars.yaml"
+    #    ansible_python_interpreter: /usr/bin/python
+
+  vars_files: # 'Include environment specific "gcp_*" variables (zone, creds json etc.) infos'
+      - "{{ playbook_dir }}/../inventories/{{ infra_environment }}/inventory.compute.gcp.yaml"
+      - "{{ host_specific_vars }}"
+
+  pre_tasks:
+
+    - debug:
+        msg: "{{ host_specific_vars }}"
+
+
+    - name: Register dummy host with variable
+      add_host:
+        name: "NEW_HOST"
+        NAME: "{{ instance_name }}"
+
+
+    - name: "We check whether the minimum set of variables (ex: 'infra_environment') are defined, othewise we abort..."
+      assert:
+        quiet: 'true'
+        that:
+          - "{{ item }} is defined"
+        fail_msg: |
+          You need to overide/define the variable "{{ item }}" in one of your playbook's vars.yaml files.
+          These vars.yaml files are usually located under the 'inventories' directory.
+          For example, 'production' and 'development' are the expected values for 'infra_environment'.
+      loop:
+        - infra_environment
+        - gcp_project
+        - gcp_cred_kind
+        - gcp_cred_file
+        - gcp_zone
+        - gcp_region
+      loop_control:
+        label: "  -  Validating that {{ item }} is defined "
+
+  tasks:
+
+
+    - debug:
+        msg: "INFO  : Provisioning '{{ infra_environment | upper }}' environment infra in zone '{{ gcp_zone }}', for project '{{ gcp_project }}' using creds: '{{ gcp_cred_file }}'"
+
+
+    - name: 'create a network'
+      gcp_compute_network:
+        name: "{{ sub_domain }}-{{ domain_name }}"
+        project: "{{ gcp_project }}"
+        auth_kind: "{{ gcp_cred_kind }}"
+        service_account_file: "{{ gcp_cred_file }}"
+        scopes:
+          - https://www.googleapis.com/auth/compute
+        state: "{{ state }}"
+      register: network
+      tags:
+        - net
+
+
+    - name: "create a static IP address (if there are none already reserved) named: {{ instance_purpose_name }}-static-ip-{{ random_number }}"
+      gcp_compute_address:
+        name: "{{ instance_purpose_name }}-static-ip-{{ random_number }}"
+        region: "{{ gcp_region }}"
+        project: "{{ gcp_project }}"
+        auth_kind: "{{ gcp_cred_kind }}"
+        service_account_file: "{{ gcp_cred_file }}"
+        scopes:
+          - https://www.googleapis.com/auth/compute
+        state: "{{ state }}"
+      register: address
+      tags:
+        - net
+        - dns
+
+
+    - set_fact:
+        static_ip_address: "{{ address }}"
+      tags:
+        - net
+        - dns
+
+
+    - name: "create an instance named: {{ instance_purpose_name }}-{{ random_number }}"
+      gcp_compute_instance:
+        state: "{{ state }}"
+        name: "{{ instance_purpose_name }}-{{ random_number }}"
+        machine_type: "{{ instance_type }}"
+        disks:
+#          - auto_delete: 'true'
+#            device_name: "{{ instance_purpose_name }}-{{ random_number }}-os"
+#            index: 0
+#            boot: 'true'
+#            source: "{{ os_disk }}"
+          - auto_delete: "{{ instance_os_disk_auto_delete }}"
+            device_name: "{{ instance_os_disk_name }}"
+            index: 0
+            boot: 'true'
+            initialize_params:
+              disk_name:    "{{ instance_os_disk_name }}"
+              disk_size_gb: "{{ instance_os_disk_size }}"
+              disk_type:    "{{ instance_os_disk_type }}"
+              source_image: "{{ instance_os_disk_image }}"
+          - auto_delete:    "{{ instance_data_disk_auto_delete }}"
+            device_name:    "{{ instance_data_disk_name }}"
+            index: 1
+            boot: 'false'
+            initialize_params:
+              disk_name:    "{{ instance_data_disk_name }}"
+              disk_size_gb: "{{ instance_data_disk_size }}"
+              disk_type:    "{{ instance_data_disk_type }}"
+              source_image: "{{ instance_data_disk_image }}"
+#          - auto_delete: 'false'
+#            device_name: "{{ instance_purpose_name }}-{{ random_number }}-data"
+#            index: 2
+#            boot: 'false'
+#            source: "{{ data_disk }}"
+            # creates a fast NVME 'local' SSD
+#          - auto_delete: 'true'
+#            index: 3
+#            boot: 'false'
+#            device_name: "{{ instance_purpose_name }}-nvme-data-{{ random_number }}"
+#            initialize_params:
+#              disk_size_gb: 375 # value must be multiples of 375GB only
+#              disk_type: 'local-ssd'
+#            interface: 'NVME'
+#            type: 'SCRATCH'
+        network_interfaces:
+          - network: "{{ network }}"
+            access_configs:
+              - name: External NAT
+                nat_ip: "{{ static_ip_address }}"
+                type: ONE_TO_ONE_NAT
+        zone: "{{ gcp_zone }}"
+        project: "{{ gcp_project }}"
+        auth_kind: "{{ gcp_cred_kind }}"
+        service_account_file: "{{ gcp_cred_file }}"
+        tags:
+          items: "{{ instance_basic_tags }}"
+        scopes:
+          - https://www.googleapis.com/auth/compute
+#        metadata: # https://cloud.google.com/compute/docs/startupscript?hl=fr#cloud-storage
+#          windows-startup-script-ps1: "Set-Item -Path WSMan:\\localhost\\Service\\Auth\\Certificate -Value $true\nSet-Item -Path WSMan:\\localhost\\Service\\Auth\\Basic -Value $true\n\n$url = \"https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1\"\n$file = \"$env:temp\\ConfigureRemotingForAnsible.ps1\"\n(New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)\npowershell.exe -ExecutionPolicy ByPass -File $file\n\n\nwinrm set winrm/config/service '@{AllowUnencrypted=\"true\"}'\n\n\nnetsh advfirewall firewall add rule name=\"WinRM-HTTP\" dir=in localport=5985 protocol=TCP action=allow"
+      register: instance
+
+
+    - name: "Gather the new instance's facts"
+      gcp_compute_instance_facts:
+        filters:
+        - name = "{{ instance_purpose_name }}-{{ random_number }}"
+        zone: "{{ gcp_zone }}"
+        project: "{{ gcp_project }}"
+        auth_kind: "{{ gcp_cred_kind }}"
+        service_account_file: "{{ gcp_cred_file }}"
+        scopes:
+          - https://www.googleapis.com/auth/compute
+      register: spawned_instance
+      tags:
+        - net
+        - dns
+
+
+    - name: 'Add labels on new instance'
+      gce_labels:
+        credentials_file: "{{ gcp_cred_file }}"
+        project_id: "{{ gcp_project }}"
+        labels: "{{ instance_basic_labels }}"
+        resource_type: instances
+        resource_location: "{{ gcp_zone }}"
+        resource_name: "{{ instance_purpose_name }}-{{ random_number }}"
+        state: "{{ state }}"
+
+
+    - name: 'create firewall rules for this instance'
+      gcp_compute_firewall:
+        name: "{{ item.name }}"
+        network: "{{ network }}"
+        description: "{{ item.desc | default( '' ) }} {{ ( [ 'Allow', item.direction | default('INGRESS'), 'trafic from these IPs/tags',  item.src_ips | default(''), item.source_tags | default(''), 'to these IPs/tags' ,item.dest_ips | default(''), item.target_tags | default(''), 'on ports', item.ports | default('[any]') ] ) | join( ' ' ) }} --- { MODIFIED BY ANSIBLE ON {{ '%Y-%m-%dT%H:%M:%S%z' | strftime }} }"
+        priority: "{{ item.priority | default( 1000 )}}"
+        disabled: "{{ item.disabled | default( 'false' )}}"
+        direction: "{{ item.direction | default( 'INGRESS' ) }}"
+        allowed:
+          - ip_protocol: "{{ item.protocol | default ( 'tcp' ) }}"
+            ports: "{{ item.ports | default( omit ) }}"
+        source_tags: "{{ item.source_tags | default( omit )}}"
+        source_ranges: "{{ item.src_ips | default( omit ) }}"
+        target_tags: "{{ item.target_tags | default( omit )}}"
+        destination_ranges: "{{ item.dest_ips | default( omit ) }}"
+        project: "{{ gcp_project }}"
+        auth_kind: "{{ gcp_cred_kind }}"
+        service_account_file: "{{ gcp_cred_file }}"
+        state: "{{ item.state | default( state ) }}"
+      loop:  # allow inbound connections from the office {204.237.229.226}, from Dlepage's Home {74.58.176.118} and Mvincent's Home {24.202.75.253}
+        - { name: "{{ sub_domain }}-{{ domain_name }}-allow-http",     ports: [ '80' ],  src_ips: [ 0.0.0.0/0 ], target_tags: [ 'nginx' ] }
+        - { name: "{{ sub_domain }}-{{ domain_name }}-allow-https",    ports: [ '443' ],  src_ips: [ 0.0.0.0/0 ], target_tags: [ 'nginx' ] }
+        - { name: "{{ sub_domain }}-{{ domain_name }}-allow-ssh",      ports: [ '22' ],  src_ips: [ 24.202.75.253, 70.80.131.58, 10.240.0.0/16 ], target_tags: [ 'linux' ] }
+        - { name: "{{ sub_domain }}-{{ domain_name }}-allow-icmp",     protocol: 'icmp',  src_ips: [ 24.202.75.253, 70.80.131.58 ], target_tags: [ 'linux' ] }
+          # https://blogs.msmvps.com/acefekay/2011/11/01/active-directory-firewall-ports-let-s-try-to-make-this-simple/
+        - { name: "{{ sub_domain }}-{{ domain_name }}-allow-lb-healthchecks", src_ips: [ 35.191.0.0/16, 130.211.0.0/22 ], target_tags: [ "{{ infra_environment }}" ] }
+      tags:
+        - firewall
+
+
+    - name: "Wait 2min for SSH to come up ..."
+      wait_for:
+        # host: "{{ spawned_instance['items'][0].networkInterfaces[0].accessConfigs[0].natIP }}"
+        host: "{{ address.address }}"
+        port: 22
+        delay: 2
+        timeout: 120
+      tags:
+        - ssh
+
+#    - name: "Update cloud DNS with assigned private IP ..."
+#      gcdns_record:
+#        zone_id: 'ict-framestore-com'
+#        record: 'artefact-master-01.ict.framestore.com.'
+#        record_data: "{{ spawned_instance['items'][0].networkInterfaces[0].networkIP }}"
+#        type: A
+#        ttl: 300
+#        overwrite: 'true'
+#        state: present
+#        credentials_file: "{{ gcp_cred_file }}"
+#        project_id: "{{ gcp_project }}"
+#    - gcdns_record:
+#        zone_id: 'ict-framestore-com'
+#        record: 'www1.example.com'
+#        type: A
+#        record_data:           # NOTE: All of the values must match exactly
+#          - '192.0.2.23'
+#        credentials_file: "{{ gcp_cred_file }}"
+#        project_id: "{{ gcp_project }}"
+#        service_account_email: 'ansible-ict25-01@ict25-249721.iam.gserviceaccount.com'
+
+    # - name: 'create a managed zone'
+    #   gcp_dns_managed_zone:
+    #       name: "{{ ( abbrev_env_name + '-' ) if abbrev_env_name != '' else '' }}{{ domain_name }}-{{ tld }}"
+    #       dns_name: "{{ ( abbrev_env_name + '.' ) if abbrev_env_name != '' else '' }}{{ domain_name }}.{{ tld }}."
+    #       description: "Ansible-managed {{ abbrev_env_name }} zone pour {{ domain_name }}-{{ tld }}"
+    #       #          private_visibility_config:
+    #       #            {{ tld }}works:
+    #       #              - {{ tld }}work_url: "https://www.googleapis.com/compute/v1/projects/{{ gcp_project }}/global/{{ tld }}works/default"
+    #       project: "{{ gcp_project }}"
+    #       auth_kind: "{{ gcp_cred_kind }}"
+    #       service_account_file: "{{ gcp_cred_file }}"
+    #       state: present
+    #   register: managed_zone
+    #   tags:
+    #     - dns
+
+
+    # - name: 'create a CNAME record set'
+    #   gcp_dns_resource_record_set:
+    #     name: "{{ instance_purpose }}{{ ( '.' + abbrev_env_name ) if abbrev_env_name != '' else '' }}.{{ domain_name }}.{{ tld }}."
+    #     managed_zone: "{{ managed_zone }}"
+    #     type: CNAME
+    #     ttl: 300
+    #     target:
+    #       - "{{ instance_name }}{{ ( '.' + abbrev_env_name ) if abbrev_env_name != '' else '' }}.{{ domain_name }}.{{ tld }}."
+    #     project: "{{ gcp_project }}"
+    #     auth_kind: "{{ gcp_cred_kind }}"
+    #     service_account_file: "{{ gcp_cred_file }}"
+    #     state: present
+    #   tags:
+    #     - dns
+
+
+    # - name: 'create an A record set'
+    #   gcp_dns_resource_record_set:
+    #     name: "{{ instance_name }}{{ ( '.' + abbrev_env_name ) if abbrev_env_name != '' else '' }}.{{ domain_name }}.{{ tld }}."
+    #     managed_zone: "{{ managed_zone }}"
+    #     type: A
+    #     ttl: 300
+    #     target:
+    #       - "{{ static_ip_address }}"
+    #     project: "{{ gcp_project }}"
+    #     auth_kind: "{{ gcp_cred_kind }}"
+    #     service_account_file: "{{ gcp_cred_file }}"
+    #     state: present
+    #   tags:
+    #     - dns
+
+    - name: 'Add host to groupname'
+      add_host:
+        #hostname: "{{ spawned_instance['items'][0].networkInterfaces[0].accessConfigs[0].natIP }}"
+        hostname: "{{ address.address }}"
+        groupname: new_instances
+
+
+    - debug:
+        msg: "INFO  : Project {{ gcp_project }}'s instance called '{{ instance_purpose_name }}-{{ random_number }}', which is hosted in zone '{{ gcp_zone }}' is now available at public IP address: '{{ address.address }}'"
+
+
+
+
+
+- name: 'Manage newly created instances with basic operations'
+  hosts:
+    - new_instances
+  become: 'true'
+  gather_facts: 'false'
+  strategy: linear
+
+  vars:
+    state: present
+    instance_name: "{{ hostvars['NEW_HOST']['NAME'] }}"
+    host_specific_vars: "{{ playbook_dir }}/../inventories/{{ infra_environment }}/host_vars/{{ instance_name }}/vars.yaml"
+
+  vars_files: # 'Include environment specific "gcp_*" variables (zone, creds json etc.) infos'
+      - "{{ playbook_dir }}/../inventories/{{ infra_environment }}/inventory.compute.gcp.yaml"
+      - "{{ host_specific_vars }}"
+
+
+  tasks:
+
+    - name: 'Display all variables/facts known for a host (requires "gather_facts: true" to print all vars)'
+      debug:
+        var: hostvars[inventory_hostname]
+        verbosity: 1
+
+
+    - name: 'Create a ext4 filesystem on disks'
+      filesystem:
+        fstype: ext4
+        dev: "{{ item }}"
+        opts: -m 0 -F -E lazy_itable_init=0,lazy_journal_init=0,discard
+      with_items:
+        - "/dev/disk/by-id/google-{{ instance_data_disk_name }}"
+        # - "/dev/disk/by-id/google-local-nvme-ssd-0"
+
+    - name: 'Mount drives...'
+      mount:
+        path: "/mnt/disks/{{ item }}"
+        src: "/dev/disk/by-id/google-{{ item }}"
+        opts: discard,defaults
+        state: mounted
+        fstype: ext4
+      with_items:
+        - "{{ instance_data_disk_name }}"

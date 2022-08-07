@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fonctions JS</title>
+        <link rel="stylesheet" type="text/css" href="quiz.css">
+            <script>
+                 
+                var grandTotal = 0;
+
+                function fonction1(){
+                    var total = 14;
+                    grandTotal = grandTotal + total;
+                    document.getElementById("result").innerHTML = grandTotal;
+                    document.getElementById("total").innerHTML = total;
+                }
+        </script>
+    </head>
+    <body>
+        <h1>Allumettes (100% un copie du jeu des trombones)</h1>
+            <div id="f1">
+                <button id="total" onclick="fonction1()">1</button>
+                <br>
+                <br>
+                <p id="result"></p>
+            </div>
+    </body>
+</html>

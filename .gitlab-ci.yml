@@ -1,0 +1,100 @@
+# This file is a template, and might need editing before it works on your project.
+# Official framework image. Look for the different tagged releases at:
+# https://hub.docker.com/r/library/node/tags/
+
+
+# workflow:
+#  rules:
+#    - if: $CI_RUNNER_DESCRIPTION != "maison02"
+#    - if: $CI_RUNNER_DESCRIPTION != "maison04"
+#    - if: $CI_RUNNER_DESCRIPTION != "maison06"
+
+
+
+# image: luky/rsync:latest
+image: instrumentisto/rsync-ssh:latest
+#image: ubuntu:latest
+
+
+
+# This folder is cached between builds
+# http://docs.gitlab.com/ce/ci/yaml/README.html#cache
+#cache:
+#  paths:
+#  - node_modules/
+variables:
+  ANSIBLE_FORCE_COLOR: 'true'
+  SERVEUR_WEB_DE_DESTINATION: dev.nclsvncnt.net
+  COMPTE_SERVEUR_WEB_DE_DESTINATION: mvincent
+
+
+# opim:  https://blog.sparksuite.com/7-ways-to-speed-up-gitlab-ci-cd-times-29f60aab69f9
+
+stages:
+  - deploy
+
+euf_job_name:
+  stage: deploy
+  script:
+    - export
+
+
+deploy-test:
+  stage: deploy
+  # tags:
+  #   - maison-04
+  script:
+    - export TERM=xterm-256color
+    - echo $TERM
+    - echo -e '\033[1;31m' rouge => $SERVEUR_WEB_DE_DESTINATION  # rouge
+    - echo -e '\033[1;32m' vert => $COMPTE_SERVEUR_WEB_DE_DESTINATION  # vert
+    - echo -e "\e[1;33m jaune"
+    - echo -e "\e[1;34m bleu"
+    - echo -e "\e[1;35m mauve"
+    - echo -e "\e[1;36m cyan"
+    - echo -e "\e[1;37m blanc ?"
+    - echo -e "\e[1;38m blanc ??"
+    - echo -e "\e[1;39m blanc ???"
+
+    # cfr. https://docs.gitlab.com/ee/ci/ssh_keys/README.html
+    # Install ssh-agent if not already installed, it is required by Docker.
+    # (change apt-get to yum if you use a CentOS-based image)
+    #  - 'which ssh-agent || ( apk update && apk add openssh-client  )'
+    #MLV- 'which ssh-agent || ( apt-get update && apt-get install -y openssh-client rsync )'
+
+    # exécution de l'agent SSH ds l'env de 'build' pour pouvoir gérer la clé SSH (voir étape ci-dessous)
+    - eval $(ssh-agent -s)
+
+    # ajout de la clé SSH qui se trouve ds https://gitlab.com/vincenma/tests-net/-/settings/ci_cd
+    # et qui va permettre à gitlab de se brancher et de copier les fichiers du site
+    # sur le serveur ci-dessous (voir variable SERVEUR_WEB_DE_DESTINATION)
+    #- ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+
+    # création du ficheir 'known_hosts' qui permet à gitlab de se brancher sur le serveur SERVEUR_WEB_DE_DESTINATION
+    # sans avori à répondre 'oui' à la question :
+        # The authenticity of host '111.222.333.444 (111.222.333.444)' can't be established.
+        # RSA key fingerprint is f3:cf:58:ae:71:0b:c8:04:6f:34:a3:b2:e4:1e:0c:8b.
+        # Are you sure you want to continue connecting (yes/no)?
+    - mkdir /root/.ssh && chmod 0700 /root/.ssh
+    - ssh-keyscan ${SERVEUR_WEB_DE_DESTINATION} >> /root/.ssh/known_hosts
+
+    # création d'un fichier compressé contenant tout les fichiers du site web (contenu du répertoire ./public/)
+    #MLV - tar zcf ../$CI_PROJECT_NAME.tar.gz ./public/
+
+    # copie/transfert du fichier compressé sur SERVEUR_WEB_DE_DESTINATION
+  #  - echo "${RED}CI_PROJECT_NAME=$CI_PROJECT_NAME, COMPTE_SERVEUR_WEB_DE_DESTINATION=${COMPTE_SERVEUR_WEB_DE_DESTINATION}, SERVEUR_WEB_DE_DESTINATION=${SERVEUR_WEB_DE_DESTINATION}"
+    #- scp -o StrictHostKeyChecking=no ../$CI_PROJECT_NAME.tar.gz ${COMPTE_SERVEUR_WEB_DE_DESTINATION}@${SERVEUR_WEB_DE_DESTINATION}:/tmp/
+
+    # https://forum.gitlab.com/t/rebuilt-ci-runner-and-now-i-get-host-key-verification-failed/3869/4
+    #- /usr/bin/rsync -e"ssh -o StrictHostKeyChecking=no" -av --progress ../$CI_PROJECT_NAME.tar.gz ${COMPTE_SERVEUR_WEB_DE_DESTINATION}@${SERVEUR_WEB_DE_DESTINATION}:/tmp/
+    - /usr/bin/rsync -e"ssh" -av --progress ./public ${COMPTE_SERVEUR_WEB_DE_DESTINATION}@${SERVEUR_WEB_DE_DESTINATION}:/tmp/fichiers_${CI_PROJECT_NAME}
+
+    #  - ssh mvincent@dev2.nclsvncnt.com "rm -rf /locationYouPrefer/$CI_PROJECT_NAME && mkdir -p locationYouPrefer/$CI_PROJECT_NAME && tar zxf locationYouPrefer/$CI_PROJECT_NAME.tar.gz -C   locationYouPrefer/$CI_PROJECT_NAME && chmod -R 655 locationYouPrefer/$CI_PROJECT_NAME && cd locationYouPrefer/$CI_PROJECT_NAME && npm rebuild && /etc/init.d/$CI_PROJECT_NAME restart"
+
+ # only:
+ # - branchYouPrefer
+ # only:
+ #   changes:
+ #     - apps/example1/**/*
+ #     - shared-dependencies/**/*

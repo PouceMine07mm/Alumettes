@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fonctions JS</title>
+            <script>
+                var grandTotal = 0;
+
+                function fonction1(){
+                    var total = 1;
+                    grandTotal = grandTotal + total;
+                    alert(grandTotal);
+                    document.getElementById("result").innerHTML = grandTotal;
+                }
+
+                function addition( a, b ){
+                    var total = parseInt( a ) + parseInt( b );
+                    alert(total);
+                    grandTotal = parseInt( grandTotal ) + parseInt( total );
+                    alert( grandTotal );
+                }
+
+                function multiplication( x, y ){
+                    var z = parseInt( x ) * parseInt( y );
+                    alert(z)
+
+                }
+        </script>
+    </head>
+    
+    <body>
+        <h1>Fonctions JS</h1>
+       
+        <div id="age/taille">
+            <h3>Exercise 1</h3>
+            <h4>Addition de la taille et de l'&acirc;ge</h4>
+        <form id="agetaille">
+            <input name="age" type="text" placeholder="&acirc;ge" />
+                <br>
+                <br>
+            <input name="taille" type="text" placeholder="Taille" />
+                <br>
+                <br>
+            <input type="submit" value="ok" onclick="addition(taille.value, age.value)" />
+        </form>
+    </div>
+    <div id="nbr1,nbr2">
+        <h3>Exercise 2</h3>
+        <h4>Addition de deux nombres</h4>
+    <form id="agetaille">
+        <input name="nbr1" type="text" />
+        <br>
+        <br>
+        <input name="nbr2" type="text" />
+        <br>
+        <br>
+        <input type="submit" value="ok" onclick="addition(nbr1.value, nbr2.value)" />
+    </form>
+</div>
+<div id="age/taille">
+    <h3>Exercise 3</h3>
+    <h4>Multiplication</h4>
+<form  id="agetaille">
+    <input name="multi1" type="text" placeholder="Nombre 1" />
+    <br>
+    <br>
+    <input name="multi2" type="text" placeholder="Nombre 2" />
+    <br>
+    <br>
+    <input type="submit" value="ok" onclick="multiplication(multi1.value, multi2.value)" />
+</form>
+</div>
+<div id="f1">
+    <button onclick="fonction1()">+1</button>
+    <br>
+    <br>
+    <p id="result"></p>
+</div>
+    </body>
+</html>

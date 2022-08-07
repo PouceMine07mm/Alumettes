@@ -1,0 +1,49 @@
+---
+
+
+################################################################################
+
+
+vars_files: # 'Include environment specific "gcp_*" variables (zone, creds json etc.) infos'
+  - "{{ playbook_dir }}/../inventories/{{ infra_environment }}/inventory.compute.gcp.yaml"
+
+# /etc/motd
+host_specific_motd_color: 33
+
+ansible_python_interpreter: python3
+
+datadog_api_key_perso: "c2acf63526c41769e61fcab6ee394251"
+
+sub_domain: 'dev'
+domain_name: 'nclsvncnt'
+random_number: '01' # "{{ '%02d'|format( 999 | random ) }}"
+tld: 'net'
+server_name: "{{ sub_domain }}.{{ domain_name }}.{{ tld }}"
+instance_purpose: "{{ domain_name }}"
+
+
+createur_linux_de_site: "Nicolas"
+groupe_linux_du_createur_de_site: "Nicolas"
+
+
+use_hostname: "{{ inventory_hostname }}"
+abbrev_env_name: "{{ infra_environment | regex_search('(dev)')  if infra_environment=='development' else '' }}"
+instance_purpose_name: "{{ instance_purpose + ( '-' + abbrev_env_name if abbrev_env_name != '' else '' ) }}"
+# instance_type: "{{ 'f1-micro' if infra_environment=='development' else 'n1-standard-1' }}"
+instance_type: "{{ 'f1-micro' if infra_environment=='development' else 'f1-micro' }}" # 'n1-standard-1'
+# tags are used by dynamic inventoies scripts (and billing organization)
+instance_basic_labels: { cfg_mgmt: 'ansible', env: "{{ infra_environment }}", os: 'linux', project: 'nicolas', rank: 'master', service: 'nginx', nom: "{{ hostvars['NEW_HOST']['NAME'] }}" }
+# labels are used by FW rules to direct traffic
+instance_basic_tags: [ "{{ infra_environment }}", linux, nicolas, nginx ]
+
+instance_os_disk_name: "{{ instance_purpose_name }}-os-disque-{{ random_number }}"
+instance_os_disk_size: 10
+instance_os_disk_type: pd-standard # pd-ssd
+instance_os_disk_image: projects/ubuntu-os-cloud/global/images/ubuntu-minimal-1910-eoan-v20200212
+instance_os_disk_auto_delete: "{{ 'yes' if infra_environment=='development' else 'no' }}"
+
+instance_data_disk_name: "{{ instance_purpose_name }}-data-disque-{{ random_number }}"
+instance_data_disk_size: 20
+instance_data_disk_type: pd-standard # pd-ssd
+instance_data_disk_image: '' # projects/centos-cloud/global/images/centos-7-v20190813
+instance_data_disk_auto_delete: "{{ 'yes' if infra_environment=='development' else 'no' }}"

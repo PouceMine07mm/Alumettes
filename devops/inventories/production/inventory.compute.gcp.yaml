@@ -1,0 +1,216 @@
+---
+
+
+# IMPORTANT :
+#export ANSIBLE_INVENTORY_CACHE_CONNECTION=/tmp
+#export  ANSIBLE_CACHE_PLUGIN_CONNECTION=/tmp
+
+
+# https://docs.ansible.com/ansible/latest/plugins/inventory.html?highlight=gcp_compute%20plugin%20inventory
+
+plugin: gcp_compute
+cache: yes
+cache_plugin: jsonfile
+cache_timeout: 20
+cache_connection: /tmp/gcp
+cache_prefix: gcp
+
+
+auth_kind: serviceaccount
+
+
+#You can target hosts that are in the intersection of two or more groups using the limit option. For example:
+#ansible-playbook --limit 'sydney:&webservers:&left' playbook.yml
+
+compose:
+  #  gce_network: 'networkInterfaces | json_query("[0].network.name")'
+  #  gce_private_ip: 'networkInterfaces | json_query("[0].networkIP")'
+  #  gce_public_ip: 'networkInterfaces | json_query("[0].accessConfigs[0].natIP")'
+  #  gce_subnetwork: 'networkInterfaces | json_query("[0].subnetwork.name")'
+#  master_hosts: labels.service + '_' + labels.rank + '_hosts'
+#  windows_hosts: labels.os + '_hosts'
+  # Set an inventory parameter to use the Public IP address to connect to the host
+  #   # For Private ip use "networkInterfaces[0].networkIP"
+  ansible_host: networkInterfaces[0].accessConfigs[0].natIP
+  #ansible_host: networkInterfaces[0].networkIP
+  #https://github.com/ansible/ansible/issues/47573#issuecomment-43695776://github.com/ansible/ansible/issues/47573#issuecomment-436957768
+  #server_type: "ansible_hostname | regex_replace ('(.{6})(.{2}).*', '\\2')"
+
+    #MLV# groups:
+    #MLV#   all_hosts: true
+    #MLV#   all_running_hosts: "'RUNNING' in status"
+    #MLV#     # simple name matching
+    #MLV#   jenkinsservers: name.startswith('jenkins')
+    #MLV#
+    #MLV#   # using ec2 'tags' (assumes aws inventory)
+    #MLV#   development: "'devel' in (ec2_tags|list)"
+    #MLV#
+    #MLV#   # using other host properties populated in inventory
+    #MLV#   private_only: not (public_dns_name is defined or ip_address is defined)
+    #MLV#
+    #MLV#   # complex group membership
+    #MLV#   multi_group: (group_names|intersection(['jenkins', 'linux']))|length >= 2
+    #MLV# #  gcp_compute_hosts: "'-' in name"
+    #MLV# #  development: "'-' in name"
+    #MLV#   artefact_master_hosts: "'artefact' in name"
+    #MLV#   authentication_master_hosts: "'authentication' in name"
+    #MLV#   build_hosts: "'build' in name"
+    #MLV#   jenkins_master_hosts: "'jenkins' in name"
+    #MLV#   perforce_master_hosts: "'perforce-master' in name"
+
+
+  #    # add hosts to the group development if any of the dictionary's keys or values is the word 'devel'
+  #  ZZZZXXXdeveopment: "'dev' in (labels|list)"
+  #  XXXdeveopment: "'https' in (tags|list)"
+  #  LLLdeveopment: "'http in (tags['items'])"
+
+keyed_groups:
+#  - key: master_hosts
+#    separator: ''
+#    prefix: ''
+#
+#  - key: windows_hosts
+#    separator: ''
+#    prefix: ''
+  #    # this creates a common parent group for availability zones
+  - key: zone ~ '_hosts'
+    separator: ''
+    prefix: ''
+    parent_group: zone
+
+  - key: status | lower ~ '_hosts'
+    separator: ''
+    prefix: ''
+    parent_group: status
+
+  - key: machineType ~ '_hosts'
+    separator: ''
+    prefix: ''
+    parent_group: machineType
+
+  #
+  #- key: creationTimestamp | regex_replace("2019", "XXXXXXXXXXXXXXXXX"))
+  #  prefix: 'security_groups'
+
+    #  - key: (tags['items']) # ~ '_hosts'
+    #    prefix: '' # AAA___tags_arr
+    #    separator: ''
+
+      # itemA.itemB notation will classify according to label's key value, so only 'production' and not the concatenated key AND its value as in 'env_production'
+    # Removing, in the examsple below, the '.env' (the label key itself) will yield groups (for ex) simply name with the value, so 'production'
+  - key: labels.env ~ '_hosts'
+    separator: ''
+    prefix: '' # DDD___labels_env
+    parent_group: environment
+
+  - key: labels.os ~ '_hosts'
+    separator: ''
+    prefix: '' # DDD___labels_env
+    parent_group: os
+
+  - key: labels.service ~ '_hosts'
+    separator: ''
+    prefix: '' # DDD___labels_env
+    parent_group: service
+
+  - key: labels.rank ~ '_hosts'
+    separator: ''
+    prefix: '' # DDD___labels_env
+    parent_group: rank
+
+    #  - prefix: network
+    #    key: gce_subnetwork
+    #  - prefix: privateip
+    #    separator: ""
+    #    key: gce_private_ip
+    #  - prefix: "public_ip"
+    #    separator: ""
+    #    key: gce_public_ip
+
+    #  - key: project
+    #    prefix: BBB___project
+    #  - key: machineType
+    #    prefix: CCC___machine_type
+
+    #  - key: cpuPlatform
+    #    prefix: cpu_
+    #  - key: labels
+    #    prefix: ZZZ___labels
+    #  - prefix: gcp
+    #    separator: '-'
+    #    keys: labels['group']
+
+#fonctionel  groups:
+#fonctionel    all_hosts: true
+#fonctionel    running_hosts: "'RUNNING' in status"
+    #MLV#     # simple name matching
+    #MLV#   jenkinsservers: name.startswith('jenkins')
+    #MLV#
+    #MLV#   # using ec2 'tags' (assumes aws inventory)
+    #MLV#   development: "'devel' in (ec2_tags|list)"
+    #MLV#
+    #MLV#   # using other host properties populated in inventory
+    #MLV#   private_only: not (public_dns_name is defined or ip_address is defined)
+    #MLV#
+    #MLV#   # complex group membership
+    #MLV#   multi_group: (group_names|intersection(['jenkins', 'linux']))|length >= 2
+    #MLV# #  gcp_compute_hosts: "'-' in name"
+    #MLV# #  development: "'-' in name"
+    #MLV#   artefact_master_hosts: "'artefact' in name"
+    #MLV#   authentication_master_hosts: "'authentication' in name"
+    #MLV#   build_hosts: "'build' in name"
+    #MLV#   jenkins_master_hosts: "'jenkins' in name"
+    #MLV#   perforce_master_hosts: "'perforce-master' in name"
+
+
+  #    # add hosts to the group development if any of the dictionary's keys or values is the word 'devel'
+  #  ZZZZXXXdeveopment: "'dev' in (labels|list)"
+  #  XXXdeveopment: "'https' in (tags|list)"
+  #  LLLdeveopment: "'http in (tags['items'])"
+
+
+# mlv # all:
+# mlv #   children:
+# mlv #     linux:
+# mlv #       children:
+# mlv #         development:
+# mlv #           children:
+# mlv #             gcp_compute_hosts:
+# mlv #               hosts:
+# mlv #                 localhost:
+# mlv #                 vars:
+# mlv #                   user_id: {{ lookup('env','USER') }}
+# mlv #                   ansible_connection: local
+# mlv #                   ansible_python_interpreter: "{{ansible_playbook_python}}"
+# mlv #
+# mlv # #                dev-mtl-ssh-02:
+# mlv # #                  ansible_user: mvincent
+# mlv # #                  ansible_host: dev-mtl-ssh-02.20100.net
+# mlv # #                  use_hostname: "{{ inventory_hostname }}"
+
+hostnames:
+  - name # public_ip
+
+    #filters:
+    #  lable:env:
+    #    - development
+      # - qa
+#  - name = instancename
+#https://cloud.google.com/sdk/gcloud/reference/topic/filters
+#filters:
+#  - machineType = n1-standard-4
+#  - name ~ deuxio
+#  - scheduling.automaticRestart = true AND machineType = n1-standard-1
+
+
+
+#### Credentials go below:
+ansible_python_interpreter: python2.7
+gcp_region: us-east1
+service_account_file: /Users/mvincent/.ansible/secrets/nclsvncnt-net-477071b856a0.json
+projects: nclsvncnt-net
+regions: us-east1
+gcp_cred_file: /Users/mvincent/.ansible/secrets/nclsvncnt-net-477071b856a0.json
+gcp_project: nclsvncnt-net
+gcp_cred_kind: serviceaccount
+gcp_zone: us-east1-b

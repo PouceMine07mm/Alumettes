@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head >  
+  <link rel="stylesheet" type="text/css" href="quiz.css">
+  <title>Bienvenue sur nclsvncnt.net!</title>
+<script>
+  function somme(parAge, parTaille){
+
+    var total = parseInt( parAge ) + parseInt( parTaille ) ;
+    alert(total);
+  }
+</script>
+</head>
+<body bgcolor=#1f1e1e>
+  
+<br>
+<br>
+<div style="text-align: center;">
+  <h1><span style="color: white">Bienvenue sur mon site</span></h1>
+    <p><span style="color: white;">Si vous voulez, il ya un jeu (un jeu dans lequel vous devez choisir la bonne porte pour avancer) ou un quiz (en d&eacute;velopement).</span> </p>
+    </div>
+    <kbd>Allo</kbd>
+   <br>
+   <br>
+   <br>
+   <br>
+   <br>
+   <div style="text-align:center;" >
+  <a href="jeu.html" target="_blank"><button class="button buttonD">Jeu</button></a>
+  <br>
+  <a href="quiz.html" target="_blank"><button class="button buttonD">Quiz</button></a>
+  </div>
+  <div id="myDIV">
+    <img src="porte.png">
+    
+  </div>
+  <button accesskey="w" onclick="myFunction()">Oui</button>
+  <script>
+    function myFunction() {
+      var x = document.getElementById("myDIV");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+    </script>
+        <form action="#" id="register">
+          <input name="age" type="text" value="" />
+          <br>
+          <input name="taille" type="text" value="" />
+          <br>
+          <input type="submit" value="ok" onclick="somme(age.value, taille.value)" />
+      </form>
+      
+</body>
+</html>
+

@@ -1,0 +1,48 @@
+---
+
+
+################################################################################
+
+# création du répertoire (et un symlink) qui va contenir les fichiers html du site
+
+
+- name: "create the 'nginx/{{ sub_domain }}{{ domain_name }}.{{ tld }}' directory"
+  file:
+    state: directory
+    dest: "/mnt/disks/{{ instance_data_disk_name }}/nginx/{{ sub_domain }}{{ domain_name }}.{{ tld }}"
+    mode: 0755
+    owner: "{{ createur_linux_de_site }}"
+    group: "{{ groupe_linux_du_createur_de_site }}"
+
+- name: "create the 'nginx/{{ sub_domain }}{{ domain_name }}.{{ tld }}' symlink"
+  file:
+    state: link
+    src: "/mnt/disks/{{ instance_data_disk_name }}/nginx/{{ sub_domain }}{{ domain_name }}.{{ tld }}"
+    name: "/home/{{ createur_linux_de_site }}/{{ sub_domain }}{{ domain_name }}.{{ tld }}"
+    mode: 0755
+    owner: "{{ createur_linux_de_site }}"
+    group: "{{ groupe_linux_du_createur_de_site }}"
+    force: 'true'
+
+- name: "création d'un fichier index.html de base contenant le nom du serveur SSI il n'existe pas déjà"
+  shell: "echo 'Bienvenu sur: {{ inventory_hostname }}!' > index.html"
+  args:
+    chdir: "/mnt/disks/{{ instance_data_disk_name }}/nginx/{{ sub_domain }}{{ domain_name }}.{{ tld }}/"
+    creates: index.html
+
+- name: "on ajuste les permissions sur le fichier index.html"
+  file:
+    path: "/mnt/disks/{{ instance_data_disk_name }}/nginx/{{ sub_domain }}{{ domain_name }}.{{ tld }}/index.html"
+    state: touch
+    mode: 0644
+    owner: "{{ createur_linux_de_site }}"
+    group: "{{ groupe_linux_du_createur_de_site }}"
+
+# - name: "création d'un fichier index.html de base contenant le nom du serveur SSI il n'existe pas déjà"
+#   lineinfile:
+#     path: "/mnt/disks/{{ instance_data_disk_name }}/nginx/html/index.html"
+#     create: 'true'
+#     state: present
+#     line: "Bienvenu sur: {{ inventory_hostname }}"
+#     owner: "{{ createur_linux_de_site }}"
+#     group: "{{ groupe_linux_du_createur_de_site }}"

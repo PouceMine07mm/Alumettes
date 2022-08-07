@@ -1,0 +1,79 @@
+---
+
+
+################################################################################
+- hosts:
+    - all
+  become: 'true'
+  gather_facts: 'false'
+  vars_files: # 'Include environment specific "gcp_*" variables (zone, creds json etc.) infos'
+      - "{{ playbook_dir }}/inventories/{{ infra_environment }}/inventory.compute.gcp.yaml"
+
+  tasks:
+
+    - name: "Create the required directory if it does not exist"
+      file:
+        path: /etc/google/auth/
+        state: directory
+        mode: '0700'
+      tags:
+        - monitoring
+        - gcp
+
+
+    # https://cloud.google.com/logging/docs/agent/authorization#copy-private-key
+    # Required to permit access for monitoring/logging StackDriver agents
+    - name: "Copy the agents's required permissions' file to the instance"
+      copy:
+        src: "{{ gcp_cred_file }}"
+        dest: /etc/google/auth/application_default_credentials.json
+        owner: root
+        group: root
+        mode: 0400
+        backup: yes
+      tags:
+        - monitoring
+        - gcp
+
+
+    #see:
+    # https://cloud.google.com/monitoring/workspaces/guide#single-project-ws
+    # https://cloud.google.com/monitoring/agent/install-agent#linux-install
+    - name: "Downloading monitoring agent repo config"
+      get_url:
+        url: https://dl.google.com/cloudagents/add-monitoring-agent-repo.sh
+        dest: /tmp
+        backup: 'true'
+      tags:
+        - monitoring
+        - gcp
+
+
+    - name: "Installing monitoring agent apt repo config"
+      command: bash add-monitoring-agent-repo.sh
+      args:
+        chdir: /tmp
+        creates: /opt/stackdriver/collectd/sbin/stackdriver-collectd
+      tags:
+        - monitoring
+        - gcp
+
+
+    - name: "Installing monitoring agent per se"
+      apt:
+        name: stackdriver-agent
+        state: present
+        update_cache: 'false'
+      tags:
+        - monitoring
+        - gcp
+
+
+    - name: "Starting monitoring agent service"
+      service:
+        name: stackdriver-agent
+        state: started
+      tags:
+        - monitoring
+        - gcp
+        - running

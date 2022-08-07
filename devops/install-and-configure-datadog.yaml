@@ -1,0 +1,67 @@
+---
+
+
+################################################################################
+
+
+# pour activer une fois installé: possible qu'il faille faire:
+# sudo service datadog-agent-sysprobe start
+# sudo service enable datadog-agent-sysprobe
+# sudo systemctl enable datadog-agent-sysprobe
+# source: https://docs.datadoghq.com/network_performance_monitoring/installation/?tab=agent
+# Datadog
+- hosts:
+    - all
+  become: 'true'
+  gather_facts: 'false'
+
+  roles:
+    - role: datadog.datadog
+      tags:
+        - datadog
+
+  vars:
+    datadog_api_key: "{{ datadog_api_key_perso }}"
+    datadog_config:
+      process_config:
+        enabled: "true" # has to be set as a string
+        scrub_args: 'true'
+    system_probe_config:
+      enabled: 'true'
+      sysprobe_socket: /opt/datadog-agent/run/sysprobe.sock
+    datadog_checks:
+      process:
+        init_config:
+        instances:
+          - name: ssh
+            search_string: ['ssh', 'sshd' ]
+          - name: syslog
+            search_string: ['rsyslog' ]
+            cpu_check_interval: 0.2
+            exact_match: 'true'
+            ignore_denied_access: 'true'
+      ssh_check:
+        init_config:
+        instances:
+          - host: localhost
+            port: 22
+            username: root
+            password: changeme
+            sftp_check: 'true'
+            private_key_file:
+            add_missing_keys: 'true'
+      nginx:
+         init_config:
+         instances:
+           - nginx_status_url: http://127.0.0.1/nginx_status/
+         logs:
+           - type: file
+             path: /var/log/gninx/access.log
+             service: myapp
+             source: nginx
+             sourcecategory: http_web_access
+           - type: file
+             path: /var/log/nginx/error.log
+             service: nginx
+             source: nginx
+             sourcecategory: http_web_access
