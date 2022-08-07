@@ -1,7 +1,10 @@
+html * {
+  font-family: 'Open Sans', sans-serif;
+}
+
 body {
     background-color: #4d2c46;
     font-size: 20px;
-    font-family: 'messe_duesseldorfregular';  }
   h3 {
     display: inline-block;
   }
@@ -24,11 +27,9 @@ body {
     color: white;
     margin-bottom: 7.5px;
     border-radius: 10px;
-    font-family: 'messe_duesseldorfregular';
   }
 
   script {
-    font-family: 'messe_duesseldorfregular';
   }
   
   button.curseurs {
@@ -106,11 +107,5 @@ body {
 
   }
 
-@font-face {
-  font-family: 'messe_duesseldorfregular';
-  src: url('messeduesseldorf-o1d3-webfont.woff2') format('woff2'),
-       url('messeduesseldorf-o1d3-webfont.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
 
 }
