@@ -7,8 +7,8 @@ var incrementeur = 1;
 //Fonction qui incremente la variable 'somme'
 function incrementSomme() {
     somme += incrementeur
-    document.getElementById("somme").innerHTML = "Clique moi!" + " (+" + incrementeur +")" 
-    document.getElementById("total").innerHTML = somme
+    document.getElementById("somme").innerHTML = "Faire une alumette"
+    document.getElementById("total").innerHTML = `Alumettes: ${somme}`
 }
 
 
