@@ -10,13 +10,21 @@
 <!--Div de l'increment + de l'affichage des alumettes  -->
         <div>
             <h1> Alumettes: <span id="total">0</span></h1>
-            <button id="somme" onclick="faireAlumette()" >Faire une alumette</button>
+            <h3>Argent disponible: <span id="argent">100000</span>$</h3>
+            <br>
+            <button id="creeAlumette" onclick="faireAlumette()" >Faire une alumette</button>
         </div>
 <!-- Div separant les ressources -->
         <div>
             <h3>Quantites</h3>
-            <p>Bois: <span id="boisInventaire">10.0</span>m</p>
+            <p>Bois: <span id="boisInventaire">1000</span>cm</p>
+            <button onclick="achatBois(10)">100</button>
+            <button onclick="achatBois(100)">1000</button>
+            <button onclick="achatBois(1000)">10000</button>
             <p>Souffre: <span id="souffreInventaire">100</span>mL</p>
+            <button onclick="achatSouffre(100)">100</button>
+            <button onclick="achatSouffre(1000)">1000</button>
+            <button onclick="achatSouffre(10000)">10000</button>
         </div>
     </body>
 </html>
