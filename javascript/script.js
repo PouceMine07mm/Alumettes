@@ -53,7 +53,7 @@ function faireAlumette() {
         document.getElementById("boisInventaire").innerHTML = boisQt
         document.getElementById("souffreInventaire").innerHTML = souffreQt
         incrementSomme()
-
+        sauvegarde()
     } else {
         document.getElementById("creeAlumette").disabled = true
     }
@@ -72,6 +72,7 @@ function achatBois() {
         portefeuille -= boisPrix
         document.getElementById("boisInventaire").innerHTML = boisQt
         document.getElementById("argent").innerHTML = portefeuille
+        sauvegarde()
     } else {
         document.getElementById("achatBois").disabled = true
     }
@@ -85,6 +86,7 @@ function achatSouffre() {
         portefeuille -= souffrePrix
         document.getElementById("souffreInventaire").innerHTML = souffreQt
         document.getElementById("argent").innerHTML = portefeuille
+        sauvegarde()
     } else {
         document.getElementById("achatSouffre").disabled = true
     }
