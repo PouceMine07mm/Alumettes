@@ -4,13 +4,13 @@
         <title>Fonctions JS</title>
         <link rel="stylesheet" type="text/css" href="../css/main.css">
         <link rel="stylesheet" type="text/css" href="../css/boutons.css">
-        <script type="text/javascript" src="../javascript/script.js"></script>
+        
     </head>
     <body>
 <!--Div de l'increment + de l'affichage des alumettes  -->
         <div>
             <h1> Alumettes: <span id="total">0</span></h1>
-            <h3>Argent disponible: <span id="argent">100000</span>$</h3>
+            <h3>Argent disponible: <span id="argent">1000</span>$</h3>
             <br>
             <button id="creeAlumette" onclick="faireAlumette()" >Faire une alumette</button>
         </div>
@@ -18,13 +18,15 @@
         <div>
             <h3>Quantites</h3>
             <p>Bois: <span id="boisInventaire">1000</span>cm</p>
-            <button onclick="achatBois(10)">100</button>
-            <button onclick="achatBois(100)">1000</button>
-            <button onclick="achatBois(1000)">10000</button>
-            <p>Souffre: <span id="souffreInventaire">100</span>mL</p>
-            <button onclick="achatSouffre(100)">100</button>
-            <button onclick="achatSouffre(1000)">1000</button>
-            <button onclick="achatSouffre(10000)">10000</button>
+            <button id="achatBois" onclick="achatBois()">Acheter une corde de bois</button>
+            <p>Souffre: <span id="souffreInventaire">1000</span>mL</p>
+            <button id="achatSouffre" onclick="achatSouffre()">Acheter un 10 litres de souffre</button>
         </div>
+            <button onclick="sauvegarde()">sauvergar</button>
+            <button onclick="charger()">charger</button>
+            <button onclick="nettoyer()">Effacer les donnees</button>
+
+        <h4 id="result"></h4>
     </body>
+    <script type="text/javascript" src="../javascript/script.js"></script>
 </html>
