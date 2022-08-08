@@ -3,7 +3,6 @@ charger()
 //Minuterie qui verifie si il est possible de fabriquer une alumette au 0.5s
 setInterval(verifAlumette, 100)
 // Mineterie verif bois
-
 setInterval(verifBois, 100)
 // Minuterie verif souffre
 setInterval(verifSouffre, 100)
@@ -17,7 +16,6 @@ var incrementeur = 1;
 
 const incrementaireDefaut = 1;
 //Argent amasse par joueur
-var portefeuille =100000;
 var portefeuille =1000;
 
 const portefeuilleDefaut = 1000;
