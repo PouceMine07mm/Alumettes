@@ -1,0 +1,159 @@
+html * {
+    font-family: "Microsoft Sans Serif";
+
+}
+
+body {
+    background-color: #008080;
+    color: #fff;
+    margin: 0;
+    transition: 0.3s;
+    -webkit-transition: 0.3s;
+}
+
+/* #titre {
+	font-weight: 300px;
+	text-align: center
+} */
+
+.mainContent {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap: 10px;
+    place-content: center;
+    margin: auto;
+}
+
+/* .mainContent div {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+} */
+
+.mainContent div a {
+    align-self: flex-end;
+    margin-top: auto;
+    width: 100%
+}
+
+.window {
+    background: #c0c0c0;
+    color: #000;
+    transition: 0.1s;
+
+    -webkit-transition: 0.1s;
+    border-left: 2px ridge #efefef;
+    border-top: 2px ridge #efefef;
+    border-right: 2px ridge #000000;
+    border-bottom: 2px ridge #000000;
+}
+
+.content {
+    padding: 10px;
+}
+
+button {
+    text-align: center;
+    background-color: #c0c0c0;
+    color: #000;
+    border-left: 2px solid #efefef;
+    border-top: 2px solid #efefef;
+    border-right: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+}
+
+button:active {
+    border-right: 2px solid #efefef;
+    border-bottom: 2px solid #efefef;
+    border-left: 2px solid #000000;
+    border-top: 2px solid #000000;
+}
+
+.buttonNavigation {
+    width: 75px;
+    height: 25px;
+    float: right;
+    margin-bottom: 10px;
+}
+
+.windowTopBar {
+    background-image: linear-gradient(to right, #00007f, #0e7ec7);
+    color: #fff;
+    display: flex;
+    align-items: stretch;
+    padding: 0px 2px;
+}
+
+.windowTopBar > div {
+    text-align: center;
+}
+
+#windowTitle {
+    flex-grow: 7;
+    text-align: left;
+}
+
+#windowMinimize {
+    flex-grow: 0;
+}
+
+#windowMaximize {
+    flex-grow: 0;
+}
+
+#windowClose {
+    flex-grow: 0;
+}
+
+/* ====================================================================== */
+/* ========================= ADAPTATIONS MOBILE ========================= */
+/* ====================================================================== */
+
+/* si la largeur d'écran est d'au moins 601px, ordinateur */
+@media screen and (min-width: 601px) {
+
+    /* .content {
+		margin-top: 10vh;
+		width: 20vmax;
+	} */
+    .mainContent {
+        margin-top: 10vh;
+        width: 50vmax;
+        grid-template-columns: auto auto auto;
+    }
+
+    /* button {
+		font-size: 1.8vmin;
+		padding: 0.7vmax;
+	} */
+}
+
+/* si la taille d'écran est moins de 600px, mobile */
+@media screen and (max-width: 600px) {
+    .window {
+        width: 87vmin;
+        border-radius: 20px;
+    }
+
+    input[type=submit] {
+        width: 100%;
+        margin-top: 0;
+    }
+
+    .container {
+        height: 100vmax;
+        width: 100vmin;
+    }
+
+    .mainContent {
+        margin-top: 10vh;
+        width: 50vmax;
+        grid-template-columns: auto;
+    }
+
+    button {
+        font-size: 20px;
+        padding: 1vmax;
+    }
+}
