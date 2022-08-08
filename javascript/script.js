@@ -34,6 +34,15 @@ const boisPrixDefaut = 100;
 var souffrePrix = 10
 
 const souffreprixDefaut = 100;
+
+function chargementPage(){
+    if  ( localStorage.length === 0 )  {
+        initLocalStorage()
+    } else {
+        charger()
+    }
+}
+
 // TODO Faire en sorte les chiffres ronds n'aient pas de ".0"
 //Fonction qui deduit les quantites d'inventaire
 function faireAlumette() {
@@ -133,7 +142,7 @@ function charger() {
     document.getElementById("argent").innerHTML = portefeuille
 }
 
-function nettoyer() {
+function initLocalStorage() {
     localStorage.setItem("nbrAlumettes", sommeDefaut)
     localStorage.setItem("nbrBois", boisQtDefaut)
     localStorage.setItem("nbrSouffre", souffreQtDefaut)
@@ -153,5 +162,3 @@ function nettoyer() {
 }
 
 // Charge automatiquement les localStorage au lancement de la page
-sauvegarde()
-charger()
