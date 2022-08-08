@@ -137,6 +137,9 @@ function nettoyer() {
     somme = localStorage.getItem("nbrAlumettes")
     boisQt = localStorage.getItem("nbrBois")
     souffreQt = localStorage.getItem("nbrSouffre")
+    somme = parseInt(somme)
+    boisQt = parseInt(boisQt)
+    souffreQt = parseInt(souffreQt)
     document.getElementById("total").innerHTML = somme
     document.getElementById("boisInventaire").innerHTML = boisQt
     document.getElementById("souffreInventaire").innerHTML = souffreQt
