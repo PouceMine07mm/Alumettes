@@ -50,20 +50,28 @@ function incrementSomme() {
 }
 
 // Fonction pour l'achat du bois
-function achatBois(quantite){
-        boisQt += (quantite * 10)
-        portefeuille -= quantite * boisPrix
+function achatBois(){
+    if (portefeuille>=boisPrix){
+        boisQt += 1000
+        portefeuille -= boisPrix
         document.getElementById("boisInventaire").innerHTML = boisQt
         document.getElementById("argent").innerHTML = portefeuille
+    } else{
+        document.getElementById("achatBois").disabled = true
+    }
 }
 
 // Fonction pour l'achat du souffre
 
-function achatSouffre(quantite){
-        souffreQt += quantite
-        portefeuille -= quantite * boisPrix
+function achatSouffre(){
+    if (portefeuille>=souffrePrix){
+        souffreQt += 10000
+        portefeuille -= souffrePrix
         document.getElementById("souffreInventaire").innerHTML = souffreQt
         document.getElementById("argent").innerHTML = portefeuille
+    } else{
+        document.getElementById("achatSouffre").disabled = true
+    }
 }
 
 // Fonction verifiant si les materiaux necessaire pour la construction dune alumette sont present
