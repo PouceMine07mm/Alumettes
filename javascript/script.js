@@ -1,8 +1,12 @@
 // Charge automatiquement les localStorage au lancement de la page
 charger()
 //Minuterie qui verifie si il est possible de fabriquer une alumette au 0.5s
+setInterval(verifAlumette, 100)
+// Mineterie verif bois
 
-setInterval(verifAlumette, 500)
+setInterval(verifBois, 100)
+// Minuterie verif souffre
+setInterval(verifSouffre, 100)
 
 //Somme totale des unites
 var somme = 0;
@@ -72,6 +76,24 @@ function verifAlumette(){
     }
 }
 
+// Fonctions verifiant si il est possible dacheter plus de ressources
+function verifBois(){
+    if ( portefeuille >= boisPrix ){
+        document.getElementById("achatBois").disabled = false
+        
+    } else {
+        document.getElementById("achatBois").disabled = true
+    }
+}
+
+function verifSouffre(){
+    if ( portefeuille >= souffrePrix){
+        document.getElementById("achatSouffre").disabled = false
+        
+    } else {
+        document.getElementById("achatSouffre").disabled = true
+    }
+}
 // Fonction de sauvegarde/charger sauvegarde
 
 function sauvegarde(){
