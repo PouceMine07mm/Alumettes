@@ -1,3 +1,5 @@
+// Charge automatiquement les localStorage au lancement de la page
+charger()
 //Minuterie qui verifie si il est possible de fabriquer une alumette au 0.5s
 
 setInterval(verifAlumette, 500)
@@ -70,3 +72,34 @@ function verifAlumette(){
     }
 }
 
+// Fonction de sauvegarde/charger sauvegarde
+
+function sauvegarde(){
+    localStorage.setItem("nbrAlumettes", somme)
+    localStorage.setItem("nbrBois", boisQt)
+    localStorage.setItem("nbrSouffre", souffreQt)
+}
+
+function charger(){
+    somme = localStorage.getItem("nbrAlumettes")
+    boisQt = localStorage.getItem("nbrBois")
+    souffreQt = localStorage.getItem("nbrSouffre")
+    somme = parseInt(somme)
+    boisQt = parseInt(boisQt)
+    souffreQt = parseInt(souffreQt)
+    document.getElementById("total").innerHTML = somme
+    document.getElementById("boisInventaire").innerHTML = boisQt
+    document.getElementById("souffreInventaire").innerHTML = souffreQt
+}
+
+function nettoyer(){
+    localStorage.setItem("nbrAlumettes", sommeDefaut)
+    localStorage.setItem("nbrBois", boisQtDefaut)
+    localStorage.setItem("nbrSouffre", souffreQtDefaut)
+    somme = localStorage.getItem("nbrAlumettes")
+    boisQt = localStorage.getItem("nbrBois")
+    souffreQt = localStorage.getItem("nbrSouffre")
+    document.getElementById("total").innerHTML = somme
+    document.getElementById("boisInventaire").innerHTML = boisQt
+    document.getElementById("souffreInventaire").innerHTML = souffreQt
+}
