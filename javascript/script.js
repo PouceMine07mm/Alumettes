@@ -16,7 +16,7 @@ var incrementeur = 1;
 
 const incrementaireDefaut = 1;
 //Argent amasse par joueur
-var portefeuille =1000;
+var portefeuille = 1000;
 
 const portefeuilleDefaut = 1000;
 //Quantite des deux ressources detenus par joueur
@@ -37,8 +37,8 @@ var souffrePrix = 10
 const souffreprixDefaut = 100;
 // TODO Faire en sorte les chiffres ronds n'aient pas de ".0"
 //Fonction qui deduit les quantites d'inventaire
-function faireAlumette(){
-    if ( boisQt > 0 && souffreQt > 0){
+function faireAlumette() {
+    if (boisQt > 0 && souffreQt > 0) {
         boisQt -= 10
         souffreQt -= 1
         // boisQt = Number.parseFloat(boisQt).toFixed(1);
@@ -58,34 +58,34 @@ function incrementSomme() {
 }
 
 // Fonction pour l'achat du bois
-function achatBois(){
-    if (portefeuille>=boisPrix){
+function achatBois() {
+    if (portefeuille >= boisPrix) {
         boisQt += 1000
         portefeuille -= boisPrix
         document.getElementById("boisInventaire").innerHTML = boisQt
         document.getElementById("argent").innerHTML = portefeuille
-    } else{
+    } else {
         document.getElementById("achatBois").disabled = true
     }
 }
 
 // Fonction pour l'achat du souffre
 
-function achatSouffre(){
-    if (portefeuille>=souffrePrix){
+function achatSouffre() {
+    if (portefeuille >= souffrePrix) {
         souffreQt += 10000
         portefeuille -= souffrePrix
         document.getElementById("souffreInventaire").innerHTML = souffreQt
         document.getElementById("argent").innerHTML = portefeuille
-    } else{
+    } else {
         document.getElementById("achatSouffre").disabled = true
     }
 }
 
 // Fonction verifiant si les materiaux necessaire pour la construction dune alumette sont present
 
-function verifAlumette(){
-    if ( boisQt > 0 && souffreQt > 0){
+function verifAlumette() {
+    if (boisQt > 0 && souffreQt > 0) {
         document.getElementById("creeAlumette").disabled = false
     } else {
         document.getElementById("creeAlumette").disabled = true
@@ -93,32 +93,32 @@ function verifAlumette(){
 }
 
 // Fonctions verifiant si il est possible dacheter plus de ressources
-function verifBois(){
-    if ( portefeuille >= boisPrix ){
+function verifBois() {
+    if (portefeuille >= boisPrix) {
         document.getElementById("achatBois").disabled = false
-        
+
     } else {
         document.getElementById("achatBois").disabled = true
     }
 }
 
-function verifSouffre(){
-    if ( portefeuille >= souffrePrix){
+function verifSouffre() {
+    if (portefeuille >= souffrePrix) {
         document.getElementById("achatSouffre").disabled = false
-        
+
     } else {
         document.getElementById("achatSouffre").disabled = true
     }
 }
 // Fonction de sauvegarde/charger sauvegarde
 
-function sauvegarde(){
+function sauvegarde() {
     localStorage.setItem("nbrAlumettes", somme)
     localStorage.setItem("nbrBois", boisQt)
     localStorage.setItem("nbrSouffre", souffreQt)
 }
 
-function charger(){
+function charger() {
     somme = localStorage.getItem("nbrAlumettes")
     boisQt = localStorage.getItem("nbrBois")
     souffreQt = localStorage.getItem("nbrSouffre")
@@ -130,7 +130,7 @@ function charger(){
     document.getElementById("souffreInventaire").innerHTML = souffreQt
 }
 
-function nettoyer(){
+function nettoyer() {
     localStorage.setItem("nbrAlumettes", sommeDefaut)
     localStorage.setItem("nbrBois", boisQtDefaut)
     localStorage.setItem("nbrSouffre", souffreQtDefaut)
