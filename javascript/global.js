@@ -1,3 +1,4 @@
+
 //Somme totale des unites
 var somme = 0;
 
@@ -11,11 +12,11 @@ var portefeuille = 1000;
 
 const portefeuilleDefaut = 1000;
 //Quantite des deux ressources detenus par joueur
-var boisQt = 1000
+var boisQt = 1000000000000
 
 const boisQtDefaut = 1000;
 
-var souffreQt = 1000
+var souffreQt = 1000000000000
 
 const souffreQtDefaut = 1000;
 //prix des deux ressources a lachat par le joueur
@@ -33,3 +34,4 @@ var machinesQt = 0
 
 // prix que chaque unité de machine coute
 var machinesPrix = 10
+var temps = 1000

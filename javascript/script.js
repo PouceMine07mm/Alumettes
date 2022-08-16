@@ -1,4 +1,5 @@
 
+
 //Minuterie qui verifie si il est possible de fabriquer une allumette au 0.5s
 setInterval(verifAllumette, 100)
 // Mineterie verif bois
@@ -8,8 +9,12 @@ setInterval(verifSouffre, 100)
 
 setInterval(verifMachines, 100)
 
+setInterval(machines, temps)
 
 setInterval(sauvegarde, 1000)
+
+
+setTimeout(incrementSomme, temps)
 
 
 //Fonction qui deduit les quantites d'inventaire
@@ -100,6 +105,7 @@ function achatMachines(){
     if(portefeuille >= machinesPrix){
         portefeuille -= machinesPrix
         machinesQt += 1
+       
         document.getElementById("argent").innerHTML = portefeuille
         document.getElementById("machinesNbr").innerHTML = machinesQt
     }else{
