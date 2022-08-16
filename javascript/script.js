@@ -86,3 +86,13 @@ function verifSouffre() {
         document.getElementById("achatSouffre").disabled = true
     }
 }
+
+function apparaitre(){
+    var machinediv = document.getElementById("machines")
+    if (machinediv.style.display === "none"){
+        machinediv.style.display = "block"
+    } else {
+        machinediv.style.display = "none"
+  
+    }
+}
