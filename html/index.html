@@ -2,11 +2,10 @@
 <html>
 
 <head>
-    <title>Fonctions JS</title>
+    <title>Jeux des alumettes</title>
     <!-- <link rel="stylesheet" type="text/css" href="../css/style.css"> -->
-    <link rel="stylesheet" type="text/css" href="../css/main.css">
     <link rel="stylesheet" type="text/css" href="../css/boutons.css">
-
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
 </head>
 
 <body onload="chargementPage()">
@@ -30,16 +29,16 @@
             </div>
             <div class="content">
                 <p>Bois: <span id="boisInventaire">1000</span>cm</p>
-                <button id="achatBois" onclick="achatBois()">Acheter une corde de bois</button>
+                <button id="achatBois" onclick="achatBois()">Acheter une corde de bois (-<span id="prixBois"></span>)</button>
                 <p>Souffre: <span id="souffreInventaire">1000</span>mL</p>
-                <button id="achatSouffre" onclick="achatSouffre()">Acheter un 10 litres de souffre</button>
+                <button id="achatSouffre" onclick="achatSouffre()">Acheter un 10 litres de souffre (-<span id="prixSouffre"></span>)</button>
             </div>
             <button onclick="apparaitre()">allo
             </button>
             <div id="machines">
                 <p>Machines</p>
-                <p>Alumetautomatique : <span>0</span> hihi esti dpovre</p>
-                <button>Acheter une Alumetautomatique</button>
+                <p>Alumetautomatique : <span id="machinesNbr">0</span> hihi esti dpovre</p>
+                <button id="achatMachines" onclick="achatMachines()">Acheter une Alumetautomatique</button>
 
             </div>
 
