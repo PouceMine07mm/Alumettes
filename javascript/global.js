@@ -15,9 +15,9 @@ var boisQt = 1000
 
 const boisQtDefaut = 1000;
 
-var souffreQt = 100
+var souffreQt = 1000
 
-const souffreQtDefaut = 100;
+const souffreQtDefaut = 1000;
 //prix des deux ressources a lachat par le joueur
 var boisPrix = 10
 
