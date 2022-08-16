@@ -8,22 +8,22 @@ setInterval(verifSouffre, 100)
 
 setInterval(verifMachines, 100)
 
+setInterval(verifProductionMachines, 1000)
+
+setInterval(sauvegarde, 1000)
 
 
-
-// TODO Faire en sorte les chiffres ronds n'aient pas de ".0"
 //Fonction qui deduit les quantites d'inventaire
 function faireAllumette() {
     if (boisQt > 0 && souffreQt > 0) {
-        boisQt -= 10
-        souffreQt -= 1
+        boisQt -= boisPrix
+        souffreQt -= souffrePrix
         // boisQt = Number.parseFloat(boisQt).toFixed(1);
         document.getElementById("boisInventaire").innerHTML = boisQt
         document.getElementById("souffreInventaire").innerHTML = souffreQt
         incrementSomme()
-        sauvegarde()
     } else {
-        document.getElementById("creeAlumette").disabled = true
+        document.getElementById("creeAllumette").disabled = true
     }
 }
 
@@ -40,7 +40,6 @@ function achatBois() {
         boisQt += 1000
         document.getElementById("boisInventaire").innerHTML = boisQt
         document.getElementById("argent").innerHTML = portefeuille
-        sauvegarde()
     } else {
         document.getElementById("achatBois").disabled = true
     }
@@ -54,19 +53,18 @@ function achatSouffre() {
         souffreQt += 10000
         document.getElementById("souffreInventaire").innerHTML = souffreQt
         document.getElementById("argent").innerHTML = portefeuille
-        sauvegarde()
     } else {
         document.getElementById("achatSouffre").disabled = true
     }
 }
 
-// Fonction verifiant si les materiaux necessaire pour la construction dune alumette sont present
+// Fonction verifiant si les materiaux necessaire pour la construction dune allumette sont present
 
 function verifAllumette() {
     if (boisQt > 0 && souffreQt > 0) {
-        document.getElementById("creeAlumette").disabled = false
+        document.getElementById("creeAllumette").disabled = false
     } else {
-        document.getElementById("creeAlumette").disabled = true
+        document.getElementById("creeAllumette").disabled = true
     }
 }
 
@@ -107,6 +105,27 @@ function achatMachines(){
         document.getElementById("machinesNbr").innerHTML = machinesQt
     }else{
         document.getElementById("achatMachines").disabled = true
+    }
+}
+
+function machines(){
+    if(boisQt >= boisPrix * machinesQt && souffreQt >= souffrePrix * machinesQt){
+        somme += machinesQt * 1
+        boisQt -= ( boisPrix * machinesQt)
+        souffreQt -= ( souffrePrix * machinesQt)
+        document.getElementById("total").innerHTML = somme
+        document.getElementById("boisInventaire").innerHTML = boisQt
+        document.getElementById("souffreInventaire").innerHTML = souffreQt
+    } else{
+
+    }
+}
+
+function verifProductionMachines(){
+    if(boisQt >= boisPrix * machinesQt && souffreQt >= souffrePrix * machinesQt){
+        machines()
+    } else {
+
     }
 }
 
