@@ -10,39 +10,39 @@ function chargementPage(){
 }
 // Fonction qui va sauvegarder toutes les données dans le localstorage du furteur
 function sauvegarde() {
-    sauvegardeAlumettesLocalStorage()
+    sauvegardeAllumettesLocalStorage()
     sauvegardeArgentLocalStorage()
     sauvegardeBoisLocalStorage()
     sauvegardeSouffreLocalStorage()
 }
 // Fonction qui va permettre de prendre les données du localstorage pour les afficher
 function charger() {
-    chargerAlumettesLocalStorage()
+    chargerAllumettesLocalStorage()
     chargerArgentLocalStorage()
     chargerBoisLocalStorage()
     chargerSouffreLocalStorage()
 }
 // Fonction qui remet tout le localstorage aux valeurs initiales
 function initLocalStorage() {
-    initAlumettesLocalStorage()
+    initAllumettesLocalStorage()
     initArgentLocalStorage()
     initBoisLocalStorage()
     initSouffreLocalStorage()
 }
 
-function sauvegardeAlumettesLocalStorage(){
-    localStorage.setItem("nbrAlumettes", somme)
+function sauvegardeAllumettesLocalStorage(){
+    localStorage.setItem("nbrAllumettes", somme)
 }
 
-function chargerAlumettesLocalStorage(){
-    somme = localStorage.getItem("nbrAlumettes")
+function chargerAllumettesLocalStorage(){
+    somme = localStorage.getItem("nbrAllumettes")
     somme = parseInt(somme)
     document.getElementById("total").innerHTML = somme
 }
 
-function initAlumettesLocalStorage(){
-    localStorage.setItem("nbrAlumettes", sommeDefaut)
-    somme = localStorage.getItem("nbrAlumettes")
+function initAllumettesLocalStorage(){
+    localStorage.setItem("nbrAllumettes", sommeDefaut)
+    somme = localStorage.getItem("nbrAllumettes")
     somme = parseInt(somme)
     document.getElementById("total").innerHTML = somme
 }

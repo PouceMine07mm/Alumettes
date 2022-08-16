@@ -1,6 +1,6 @@
 
-//Minuterie qui verifie si il est possible de fabriquer une alumette au 0.5s
-setInterval(verifAlumette, 100)
+//Minuterie qui verifie si il est possible de fabriquer une allumette au 0.5s
+setInterval(verifAllumette, 100)
 // Mineterie verif bois
 setInterval(verifBois, 100)
 // Minuterie verif souffre
@@ -13,7 +13,7 @@ setInterval(verifMachines, 100)
 
 // TODO Faire en sorte les chiffres ronds n'aient pas de ".0"
 //Fonction qui deduit les quantites d'inventaire
-function faireAlumette() {
+function faireAllumette() {
     if (boisQt > 0 && souffreQt > 0) {
         boisQt -= 10
         souffreQt -= 1
@@ -62,7 +62,7 @@ function achatSouffre() {
 
 // Fonction verifiant si les materiaux necessaire pour la construction dune alumette sont present
 
-function verifAlumette() {
+function verifAllumette() {
     if (boisQt > 0 && souffreQt > 0) {
         document.getElementById("creeAlumette").disabled = false
     } else {
