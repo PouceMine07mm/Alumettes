@@ -8,7 +8,6 @@ setInterval(verifSouffre, 100)
 
 setInterval(verifMachines, 100)
 
-setInterval(verifProductionMachines, 1000)
 
 setInterval(sauvegarde, 1000)
 
@@ -117,14 +116,6 @@ function machines(){
         document.getElementById("boisInventaire").innerHTML = boisQt
         document.getElementById("souffreInventaire").innerHTML = souffreQt
     } else{
-
-    }
-}
-
-function verifProductionMachines(){
-    if(boisQt >= boisPrix * machinesQt && souffreQt >= souffrePrix * machinesQt){
-        machines()
-    } else {
 
     }
 }
