@@ -26,3 +26,8 @@ const boisPrixDefaut = 100;
 var souffrePrix = 10
 
 const souffreprixDefaut = 100;
+
+// Variables pour les machines
+var machinesQt = 0
+
+var machinesPrix = 10
