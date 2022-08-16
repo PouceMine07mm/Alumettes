@@ -6,6 +6,8 @@ setInterval(verifBois, 100)
 // Minuterie verif souffre
 setInterval(verifSouffre, 100)
 
+setInterval(verifMachines, 100)
+
 
 
 
@@ -34,8 +36,8 @@ function incrementSomme() {
 // Fonction pour l'achat du bois
 function achatBois() {
     if (portefeuille >= boisPrix) {
-        boisQt += 1000
         portefeuille -= boisPrix
+        boisQt += 1000
         document.getElementById("boisInventaire").innerHTML = boisQt
         document.getElementById("argent").innerHTML = portefeuille
         sauvegarde()
@@ -48,8 +50,8 @@ function achatBois() {
 
 function achatSouffre() {
     if (portefeuille >= souffrePrix) {
-        souffreQt += 10000
         portefeuille -= souffrePrix
+        souffreQt += 10000
         document.getElementById("souffreInventaire").innerHTML = souffreQt
         document.getElementById("argent").innerHTML = portefeuille
         sauvegarde()
@@ -96,3 +98,29 @@ function apparaitre(){
   
     }
 }
+
+function achatMachines(){
+    if(portefeuille >= machinesPrix){
+        portefeuille -= machinesPrix
+        machinesQt += 1
+        document.getElementById("argent").innerHTML = portefeuille
+        document.getElementById("machinesNbr").innerHTML = machinesQt
+    }else{
+        document.getElementById("achatMachines").disabled = true
+    }
+}
+
+function verifMachines() {
+    if (portefeuille >= machinesPrix) {
+        document.getElementById("achatMachines").disabled = false
+
+    } else {
+        document.getElementById("achatMachines").disabled = true
+    }
+}
+
+
+
+document.getElementById("prixBois").innerHTML = boisPrix
+document.getElementById("prixSouffre").innerHTML = souffrePrix
+
