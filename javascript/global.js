@@ -28,6 +28,8 @@ var souffrePrix = 10
 const souffreprixDefaut = 100;
 
 // Variables pour les machines
+// Quantité de machine que l'utilisateur a en sa possession
 var machinesQt = 0
 
+// prix que chaque unité de machine coute
 var machinesPrix = 10
